@@ -40,7 +40,7 @@ function sMsT_register_js_script() {
     
     wp_enqueue_script('bootstrap-js', plugins_url('sMsText/assets/vendor/bootstrap-3.3.7-dist/js/bootstrap.min.js'));
 
-    wp_enqueue_script('main-js', plugins_url('sMsText/assets/js/main.js'));
+    wp_enqueue_script('main-js', plugins_url('sMsText/assets/js/sms_main.js'));
 
     wp_enqueue_script('toggle-js', plugins_url('sMsText/assets/js/bootstrap-toggle.min.js'));
 
@@ -113,7 +113,10 @@ function sMsT_db_install() {
     $sql = "CREATE TABLE $table_name (
         id  INT NOT NULL AUTO_INCREMENT,
         UID  INT NOT NULL ,
-        permission INT DEFAULT '0' NOT NULL,
+        granted INT DEFAULT '0' NOT NULL,
+        quota INT DEFAULT '0' NOT NULL,
+        permission_sms INT DEFAULT '0' NOT NULL,
+       
         PRIMARY KEY  (id)
         ) $charset_collate;       
 
@@ -204,10 +207,24 @@ function sMs_insert_permission($uid){
     $sql = "INSERT INTO $table_name(`UID`) VALUES ($uid); ";
     return $wpdb->query($sql);
 }
-/**update permission  */
-function sMs_update_permission($id_permission, $permission){
+/**update quota  */
+function sMs_update_quota($id_permission, $quota){
     global $wpdb;
     $table_name = $wpdb->prefix . 'sMsText';
-    $sql = " UPDATE " .$table_name. " SET  permission = '" .$permission. "' WHERE id = " .$id_permission. " ;";
+    $sql = " UPDATE " .$table_name. " SET  quota = '" .$quota. "' WHERE id = " .$id_permission. " ;";
+    return $wpdb->query($sql);
+}
+/** update granted */
+function sMs_update_granted($id_permission, $granted){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'sMsText';
+    $sql = " UPDATE " .$table_name. " SET  granted = '" .$granted. "' WHERE id = " .$id_permission. " ;";
+    return $wpdb->query($sql);
+}
+/** update  sms type*/
+function sMs_update_smstype($id_permission, $permission_sms){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'sMsText';
+    $sql = " UPDATE " .$table_name. " SET  permission_sms = '" .$permission_sms. "' WHERE id = " .$id_permission. " ;";
     return $wpdb->query($sql);
 }
