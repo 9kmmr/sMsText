@@ -70,13 +70,8 @@ function dm_load_dashicons_front_end() {
 add_action( 'wp_enqueue_scripts', 'dm_load_dashicons_front_end' );
 
 // register and set view
-function add_product(){
-    include  plugin_dir_path( __FILE__ ).'include/add_product.php';
-}
-function Add_Shop_Page(){
-    include  plugin_dir_path( __FILE__ ).'include/add_shop.php';
-}
-function Manager_Shop_View(){
+
+function sms_manager_View(){
 
     include  plugin_dir_path( __FILE__ ).'include/admin-setting.php';
 
@@ -94,25 +89,15 @@ function Register_sMsText_Page(){
         'manage_options',
         'sms_manager_Views',
         'sms_manager_View',
-        'dashicons-store' ,
-        6
+        'dashicons-format-status' ,
+        25
     );
-    add_submenu_page(
-        'Manager_Shop_Views', 
-        __( 'Add Shop', 'manager_shop' ),
-        __('Add Shop','manager_shop'),
-        'manage_options', 
-        'Add_Shop', 
-        'Add_Shop_Page'
-    );
-    
-    
-   
     
 }
 
 add_action( 'admin_menu', 'Register_sMsText_Page' );
-
+/**
+*/
 // check db and install
 global $jal_db_version;
 $jal_db_version = '1.0';
@@ -173,3 +158,56 @@ function session_init() {
 add_action( 'init', 'session_init' );
 // get post with shop id and hook view
 
+/** first insert user to permission table when install plugin */
+function check_status_all(){
+	$alluser = get_users();
+	$alldata = array();
+	$olddata = sMs_get_permission();
+	if (count($olddata)>0) {
+		foreach ($olddata as $key => $value) {
+			$alldata[count($alldata)] = $value->UID;			
+		}
+	}	
+	foreach ($alluser as $key => $value) {
+		//print_r($value);
+		if (!in_array($value->ID, $alldata))  sMs_insert_permission($value->ID);
+	}
+}
+add_action( 'wp_loaded', 'check_status_all' );
+
+/** get all permission from smstext table */
+function sMs_get_permission(){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'sMsText';
+    $sql = " SELECT * FROM " .$table_name. " ; ";     
+    return $wpdb->get_results($sql);
+}
+/**   get all permission join with user table  */
+function sMs_get_all_permission(){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'users';
+    $table_name2 = $wpdb->prefix . 'sMsText';
+    $sql = " SELECT * FROM `" .$table_name. "` INNER JOIN `".$table_name2."` ON  `".$table_name."`.`ID` = `".$table_name2."`.`UID` ; ";     
+    return $wpdb->get_results($sql);
+}
+/** get permission with user id*/
+function sMs_get_permission_id($id){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'sMsText';
+    $sql = " SELECT * FROM " .$table_name. " WHERE UID =  '".$uid."'; ";     
+    return $wpdb->get_results($sql);
+}
+/** Insert first permission when user created */
+function sMs_insert_permission($uid){
+    global $wpdb;
+	$table_name = $wpdb->prefix . 'sMsText';   
+    $sql = "INSERT INTO $table_name(`UID`) VALUES ($uid); ";
+    return $wpdb->query($sql);
+}
+/**update permission  */
+function sMs_update_permission($id_permission, $permission){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'sMsText';
+    $sql = " UPDATE " .$table_name. " SET  permission = '" .$permission. "' WHERE id = " .$id_permission. " ;";
+    return $wpdb->query($sql);
+}
