@@ -356,7 +356,8 @@ function sMs_get_all_permission(){
 function sMs_get_permission_id($id){
     global $wpdb;
     $table_name = $wpdb->prefix . 'sMsText';
-    $sql = " SELECT * FROM " .$table_name. " WHERE UID =  '".$uid."'; ";     
+    $sql = " SELECT * FROM " .$table_name. " WHERE UID =  '".$id."'; ";    
+    
     return $wpdb->get_results($sql);
 }
 /** Insert first permission when user created */
@@ -386,4 +387,27 @@ function sMs_update_smstype($id_permission, $permission_sms){
     $table_name = $wpdb->prefix . 'sMsText';
     $sql = " UPDATE " .$table_name. " SET  permission_sms = '" .$permission_sms. "' WHERE id = " .$id_permission. " ;";
     return $wpdb->query($sql);
+}
+/**
+ * 
+ */
+function settingsms($key,$secret){
+    update_option('smsapikey',$key);
+    update_option('smssecretkey',$secret);
+}
+function sendsms($from,$to,$text){
+   
+    $apikey = get_option('smsapikey');
+    $secretkey = get_option('smssecretkey');
+
+    require_once 'vendor/autoload.php';
+    $credentials = new Nexmo\Client\Credentials\Basic($apikey , $secretkey);
+    $client = new Nexmo\Client($credentials);
+
+    $message = $client->message()->send([
+      'from' => $from,
+      'to' => $to,
+      'text' => $text
+    ]);
+    
 }

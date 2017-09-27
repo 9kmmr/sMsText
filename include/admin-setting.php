@@ -15,7 +15,8 @@
         $id = $_POST['id_code'];
         sMs_update_smstype($id, $value);
     }
-
+    /*settingsms('09fb50b9','b7ce2d3d8c328da7');
+    sendsms('84942767161','841642531194','dmm thong dick');*/
   $alldata = sMs_get_all_permission();
 ?>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -31,7 +32,7 @@
     <div class="form-group">
 
     </div>
-    <div id="home" class="row panel panel-primary">     
+    <div id="home" class="row  panel-primary">     
         <table class="table table-striped table-bordered" cellspacing="0" width="100%" id="tabledata">
           <thead>
             <tr>
