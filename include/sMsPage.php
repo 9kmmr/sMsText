@@ -140,7 +140,7 @@ if(!is_user_logged_in()) {
                   
             // on keyup / change flag: reset
             telInput.on("keyup change", reset);
-
+            console.log($("#phoneto").intlTelInput("getNumber"));
             setInterval(function(){
                 
                 $("#time").text( new Date().toLocaleString());
