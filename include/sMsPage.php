@@ -46,16 +46,17 @@ if(!is_user_logged_in()) {
     <body>
         <h1 class="text-center">SMS Sending Page</h1>
         <label for=""></label>
+        <?php if ($permission->granted=='1') { ?>
         <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading text-center">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="icon">
                             <span class="bold" id="profile"><?=$thisuser->display_name?></span>
                             </div>
                         </div>
-                        <div class="col-md-offset-2 col-md-4">
+                        <div class="col-md-offset-1 col-md-4">
                             <span class="bold">Today</span>
                             <div class="date">
                                 <span id="time"></span>    
@@ -147,6 +148,7 @@ if(!is_user_logged_in()) {
                  1000
                 );
         </script>
+        <?php  } ?>
     </body>
 </html>
-<?php }?>
+<?php } ?>
